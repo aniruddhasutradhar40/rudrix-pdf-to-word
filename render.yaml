@@ -1,0 +1,13 @@
+# Optional Render Blueprint for the Python backend (Docker). The frontend goes on Vercel.
+services:
+  - type: web
+    name: rudrix-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: RUDRIX_ALLOWED_ORIGINS
+        sync: false        # set to your Vercel URL, e.g. https://your-app.vercel.app
+      - key: RUDRIX_TRUST_PROXY
+        value: "true"

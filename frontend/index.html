@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rudrix PDF to Word Converter</title>
+  <meta name="description" content="Rudrix File Solution: convert PDF to Word in Editable or Maximum Layout Preservation mode, with tables, images and OCR, plus a quality report.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Rudrix File Solution">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M10 24V8h7.2a4.6 4.6 0 0 1 1.6 8.9L22 24h-3.4l-2.8-6.4H13V24z M13 15.2h4a1.7 1.7 0 0 0 0-3.4h-4z" fill="#fff"/></svg>
+      <span>Rudrix <small>File Solution</small></span>
+    </a>
+    <div class="topbar-right">
+      <span id="serverPill" class="pill pill-wait" role="status">…</span>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="bn" aria-pressed="false">বাং</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1 data-i18n="heroTitle">PDF to Word, with a quality report you can check</h1>
+        <p class="lead" data-i18n="heroLead">Choose Editable Word for clean text and real tables, or Maximum Layout Preservation to stay as close to the PDF page as possible. Scanned pages can be read with OCR.</p>
+        <ul class="ticks">
+          <li data-i18n="tick1">Real tables and images in Word</li>
+          <li data-i18n="tick2">OCR for scanned PDFs (English / Bangla when installed)</li>
+          <li data-i18n="tick3">Files are deleted automatically after a short time</li>
+        </ul>
+      </div>
+
+      <section class="card converter" aria-labelledby="convTitle">
+        <h2 id="convTitle" class="sr-only" data-i18n="convTitle">Convert a PDF</h2>
+        <div id="banner" class="banner" role="alert" hidden></div>
+
+        <div id="drop" class="drop" tabindex="0" role="button" aria-describedby="dropHint">
+          <input id="fileInput" type="file" accept="application/pdf,.pdf" hidden>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 17v-6m-3 3 3-3 3 3"/></svg>
+          <strong id="dropTitle" data-i18n="dropTitle">Drop your PDF here or click to browse</strong>
+          <span id="dropHint" class="muted" data-i18n="dropHint">PDF only</span>
+        </div>
+        <div id="fileRow" class="filerow" hidden>
+          <span class="fname" id="fileName"></span><span class="muted" id="fileSize"></span>
+          <button type="button" id="clearFile" class="link" data-i18n="remove">Remove</button>
+        </div>
+
+        <fieldset class="modes">
+          <legend data-i18n="modeLegend">Conversion mode</legend>
+          <label class="mode"><input type="radio" name="mode" value="editable" checked>
+            <span><b data-i18n="modeEditable">Editable Word</b><small data-i18n="modeEditableDesc">Real paragraphs, headings, tables and pictures. Best for editing.</small></span></label>
+          <label class="mode"><input type="radio" name="mode" value="preserve">
+            <span><b data-i18n="modePreserve">Maximum Layout Preservation</b><small data-i18n="modePreserveDesc">Rebuilds positions, columns and fonts as closely as possible. Best for look-alike.</small></span></label>
+        </fieldset>
+
+        <div class="ocr">
+          <label class="switch"><input type="checkbox" id="ocrToggle" checked><span data-i18n="ocrLabel">OCR for scanned pages</span></label>
+          <select id="ocrLang" aria-label="OCR language"></select>
+        </div>
+        <p id="ocrNote" class="muted small"></p>
+
+        <button type="button" id="convertBtn" class="btn" disabled data-i18n="convert">Convert to Word</button>
+
+        <div id="progress" class="progress" hidden aria-live="polite">
+          <div class="bar"><i id="barFill"></i></div>
+          <span id="progressText" class="muted small"></span>
+        </div>
+
+        <div id="result" class="result" hidden>
+          <div class="result-head">
+            <span id="levelBadge" class="badge"></span>
+            <p id="levelMsg"></p>
+          </div>
+          <a id="downloadBtn" class="btn" href="#" rel="noopener" data-i18n="download">Download .docx</a>
+          <h3 data-i18n="checksTitle">Automated checks</h3>
+          <ul id="checks" class="checks"></ul>
+          <div id="warnWrap" hidden><h3 data-i18n="notesTitle">Notes for review</h3><ul id="warns" class="warns"></ul></div>
+          <p id="disclaimer" class="muted small"></p>
+          <div class="row-actions">
+            <button type="button" id="againBtn" class="btn btn-ghost" data-i18n="again">Convert another</button>
+            <button type="button" id="deleteBtn" class="link" data-i18n="deleteNow">Delete from server now</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="section" id="modes">
+      <h2 data-i18n="cmpTitle">Which mode should I choose?</h2>
+      <div class="grid2">
+        <article class="card"><h3 data-i18n="modeEditable">Editable Word</h3>
+          <p data-i18n="cmpEditable">Text becomes normal Word paragraphs and headings, tables become Word tables, and pictures are placed inline. Page size and margins follow the PDF. Complex layouts (text boxes, overlapping items, vector charts) are simplified.</p></article>
+        <article class="card"><h3 data-i18n="modePreserve">Maximum Layout Preservation</h3>
+          <p data-i18n="cmpPreserve">Uses a layout-reconstruction engine to keep positions, columns, fonts, tables and images close to the original page. The result is closer to the PDF but can contain positioned text blocks that are harder to edit.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="honest">
+      <h2 data-i18n="honestTitle">What to expect</h2>
+      <p class="prose" data-i18n="honestBody">No PDF converter can promise identical formatting for every file, because PDF stores drawing instructions, not a flowing document. Rudrix compares the result against your PDF and tells you what it could and could not verify. Always glance through the Word file before sending it on.</p>
+    </section>
+  </main>
+
+  <footer class="footer"><span>© <span id="year"></span> Rudrix File Solution</span><span class="muted" data-i18n="footerNote">Open-source engines: PyMuPDF, pdf2docx, python-docx, Tesseract</span></footer>
+
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
